@@ -10,3 +10,13 @@ docker compose up
 ```
 docker compose down
 ```
+
+## deploy
+Netlify
+
+## design
+shadcn
+https://ui.shadcn.com/docs/installation/next
+```
+npx shadcn@latest add --all
+```
