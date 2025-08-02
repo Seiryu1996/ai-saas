@@ -1,15 +1,15 @@
 "use client";
 
 import { useActionState } from "react";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
+import { Label } from "../../ui/label";
 import { generateImage } from "@/actions/actions";
 import { GenerateImageState } from "@/types/actions";
 import { Download, ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import LoadingSpinner from "../common/loading-spinner";
-import { toast } from "sonner";
+import LoadingSpinner from "../../common/loading-spinner";
+import { download } from "@/utils/client-utils";
 
 
 const initialState: GenerateImageState = {
@@ -26,34 +26,7 @@ const ImageGenerator= () => {
         if (!state.imageUrl) {
             return;
         }
-        try {
-            const base64Data = state.imageUrl.split(",")[1];
-            const blob = new Blob([Buffer.from(base64Data, "base64")], {
-                type: "image/png",
-            });
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.href = url;
-            link.download = `${state.keyword}.png`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
-            toast(
-                "ダウンロード完了",
-                {
-                    description: "画像のダウンロードが完了しました"
-                }
-            );
-        } catch (error) {
-            console.error("Download error:", error);
-            toast.error(
-                "エラー",
-                {
-                    description: "ダウンロードに失敗しました",
-                }
-            );
-        }
+        download(state.imageUrl, `${state.keyword}.png`);
     }
     return (
         <div className="space-y-6">

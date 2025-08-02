@@ -4,15 +4,30 @@ import FormData from "form-data";
 import { optimizeImage } from "@/utils/utils";
 
 export async function POST(req: Request) {
-    const { keyword } = await req.json();
-    console.log(keyword);
+    const formData = await req.formData();
+    const file = formData.get("image") as File;
+    if (!file) {
+        return NextResponse.json(
+            {
+                error: "画像ファイルを選択してください",
+            },
+            {
+                status: 400
+            }
+        );
+    }
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+    const originalImage = await optimizeImage(buffer);
     try {
         const formData = new FormData();
-        // 一部日本語対応していないため、英語化するAPIに変更する必要あり
-        formData.append("prompt", `Create Image with ${keyword}`);
+        formData.append("image", originalImage, {
+            filename: "image.png",
+            contentType: "image/png",
+        });
         formData.append("output_format", "png");
-        const response = await axios.postForm(
-            `https://api.stability.ai/v2beta/stable-image/generate/core`,
+        const response = await axios.post(
+            `https://api.stability.ai/v2beta/stable-image/edit/remove-background`,
             formData,
             {
                 validateStatus: undefined,
