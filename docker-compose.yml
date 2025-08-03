@@ -3,6 +3,7 @@ services:
     build: ./ai-saas
     ports:
       - "3000:3000"
+      - "5555:5555" # prisma
     environment:
       - NODE_ENV=development
     depends_on:
