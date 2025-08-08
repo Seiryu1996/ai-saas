@@ -1,6 +1,10 @@
 "use server";
 
+import { decrementCredits, getUserCredits } from "@/lib/db/services/credits";
 import { GenerateImageState, RemoveBackgroundState } from "@/types/actions";
+import { currentUser } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function generateImage(
     state: GenerateImageState,
@@ -13,7 +17,15 @@ export async function generateImage(
             error: "キーワードを入力してください"
         }
     }
-
+    const user = await currentUser();
+    if (!user) {
+        throw new Error("認証が必要です")
+    }
+    const credits = await getUserCredits();
+    if (credits === null || credits < 1) {
+        // try-catch NG
+        redirect("/dashboard/plan?reason=insufficient_credits");
+    }
     try {
         const response = await fetch(
             `${process.env.BASE_URL}/api/generate-image`,
@@ -26,6 +38,8 @@ export async function generateImage(
             }
         );
         const data = await response.json();
+        await decrementCredits(user.id);
+        revalidatePath("/dashboard");
         return {
             status: "success",
             imageUrl: data.imageUrl,
@@ -51,7 +65,15 @@ export async function removeBackground(
             error: "画像ファイルを選択してください"
         }
     }
-
+    const user = await currentUser();
+    if (!user) {
+        throw new Error("認証が必要です")
+    }
+    const credits = await getUserCredits();
+    if (credits === null || credits < 1) {
+        // try-catch NG
+        redirect("/dashboard/plan?reason=insufficient_credits");
+    }
     try {
         const response = await fetch(
             `${process.env.BASE_URL}/api/remove-background`,
@@ -66,6 +88,8 @@ export async function removeBackground(
         }
 
         const data = await response.json();
+        await decrementCredits(user.id);
+        revalidatePath("/dashboard");
         return {
             status: "success",
             processedImage: data.imageUrl,

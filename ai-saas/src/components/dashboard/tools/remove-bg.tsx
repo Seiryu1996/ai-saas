@@ -6,16 +6,18 @@ import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
 import { removeBackground } from "@/actions/actions";
 import { RemoveBackgroundState } from "@/types/actions";
-import { Download, Layers } from "lucide-react";
+import { Download, ImageIcon, Layers } from "lucide-react";
 import { cn } from "@/lib/utils";
 import LoadingSpinner from "../../common/loading-spinner";
 import { download } from "@/utils/client-utils";
+import { SignInButton, useUser } from "@clerk/nextjs";
 
 const initialState: RemoveBackgroundState = {
     status: "idle",
 };
 
-const RemoveBackground= () => {  
+const RemoveBackground= () => {
+    const { isSignedIn } = useUser();
     const [state, formAction, isPending] = useActionState(
         removeBackground,
         initialState
@@ -43,18 +45,27 @@ const RemoveBackground= () => {
                         />
                     </div>
                     {/** submit button */}
-                    <Button
-                        type="submit"
-                        disabled={isPending}
-                        className={cn("w-full duration-200", isPending && "bg-primary/80")}
-                    >
-                        {isPending ? (
-                            <LoadingSpinner />
-                        ) : <>
-                            <Layers className="mr-2" />
-                            背景削除
-                        </>}
-                    </Button>
+                    {isSignedIn ? (
+                        <Button
+                            type="submit"
+                            disabled={isPending}
+                            className={cn("w-full duration-200", isPending && "bg-primary/80")}
+                        >
+                            {isPending ? (
+                                <LoadingSpinner />
+                            ) : <>
+                                <Layers className="mr-2" />
+                                背景削除
+                            </>}
+                        </Button>
+                    ) : (
+                        <SignInButton>
+                            <Button className="w-full">
+                                <ImageIcon className="mr-2" />
+                                ログインして背景削除
+                            </Button>
+                        </SignInButton>
+                    )}
                 </form>
             </div>
             {/** image preview */}

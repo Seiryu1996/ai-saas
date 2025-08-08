@@ -10,13 +10,15 @@ import { Download, ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import LoadingSpinner from "../../common/loading-spinner";
 import { download } from "@/utils/client-utils";
+import { SignInButton, useUser } from "@clerk/nextjs";
 
 
 const initialState: GenerateImageState = {
     status: "idle",
 };
 
-const ImageGenerator= () => {  
+const ImageGenerator= () => {
+    const { isSignedIn } = useUser();
     const [state, formAction, isPending] = useActionState(
         generateImage,
         initialState
@@ -42,6 +44,7 @@ const ImageGenerator= () => {
                         />
                     </div>
                     {/** submit button */}
+                    {isSignedIn ? (
                     <Button
                         type="submit"
                         disabled={isPending}
@@ -54,6 +57,14 @@ const ImageGenerator= () => {
                             画像生成
                         </>}
                     </Button>
+                    ) : (
+                        <SignInButton>
+                            <Button className="w-full">
+                                <ImageIcon className="mr-2" />
+                                ログインして画像生成
+                            </Button>
+                        </SignInButton>
+                    )}
                 </form>
             </div>
             {/** image preview */}
