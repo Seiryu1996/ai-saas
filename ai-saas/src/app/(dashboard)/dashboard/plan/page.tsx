@@ -42,8 +42,8 @@ const Plan = () => {
                             <span className="ml-2 text-muted-foreground">/月</span>
                         </div>
                         <ul className="space-y-4 text-sm">
-                            {plan.features.map((feature) => (
-                                <li className="flex items-center gap-3">
+                            {plan.features.map((feature, _i) => (
+                                <li key={_i} className="flex items-center gap-3">
                                     <Check className="size-4 text-primary"/>
                                     <span>{feature}</span>
                                 </li>
