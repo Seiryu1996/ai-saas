@@ -2,12 +2,12 @@ import { Crown, Rocket, Sparkle } from "lucide-react";
 
 export const plans = [
     {
-        name: "Starter",
+        name: "FREE",
         icon: Sparkle,
         price: "￥0",
         description: "個人利用に適切なエントリープラン",
         features: [
-            "月10クレジット付与",
+            "月30クレジット付与",
             "基本的な画像生成",
             "メールサポート"
         ],
@@ -15,12 +15,12 @@ export const plans = [
         priceId: "price_1RtsDS0wr7BuiSCuGWeNEpjw",
     },
     {
-        name: "Pro",
+        name: "BASIC",
         icon: Rocket,
         price: "￥1,500",
         description: "プロフェッショナルな制作活動に",
         features: [
-            "月100クレジット付与",
+            "月300クレジット付与",
             "優先サポート",
             "商用利用可能",
             "メールサポート"
@@ -30,12 +30,12 @@ export const plans = [
         priceId: "price_1RtsAu0wr7BuiSCutWpYpLfd",
     },
     {
-        name: "Enterprice",
+        name: "PRO",
         icon: Crown,
         price: "￥3,000",
         description: "ビジネス向けの完全なソリューション",
         features: [
-            "月200クレジット付与",
+            "月600クレジット付与",
             "24時間優先サポート",
             "メールサポート",
             "新機能先行利用可能",

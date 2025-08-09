@@ -4,37 +4,37 @@ generator client {
 }
 
 datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String             @id @default(uuid())
+  clerkId            String             @unique
+  email              String             @unique
+  stripeCustomerId   String?            @unique
+  credits            Int                @default(5)
+  subscriptionStatus SubscriptionStatus @default(FREE)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  subscriptions      Subscription?
+}
+
+model Subscription {
+  id                     String   @id @default(uuid())
+  userId                 String   @unique
+  stripeSubscriptionId   String   @unique
+  stripeCurrentPeriodEnd DateTime
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+  stripePriceId          String
+  user                   User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }
 
 enum SubscriptionStatus {
   FREE
   BASIC
   PRO
-}
-
-model User {
-  id                      String    @id @default(uuid())
-  clerkId                 String    @unique
-  email                   String    @unique
-  stripeCustomerId        String?   @unique
-  credits                 Int       @default(5)
-  subscriptionStatus      SubscriptionStatus @default(FREE)
-  subscriptions           Subscription?
-  createdAt               DateTime  @default(now())
-  updatedAt               DateTime  @updatedAt
-}
-
-model Subscription {
-  id                      String    @id @default(uuid())
-  userId                  String    @unique
-  user                    User      @relation(fields: [userId], references: [id])
-  stripeSubscriptionId    String    @unique
-  stripePriceUd           String
-  stripeCurrentPeriodEnd  DateTime
-  createdAt               DateTime  @default(now())
-  updatedAt               DateTime  @updatedAt
-
-  @@index([userId])
 }
