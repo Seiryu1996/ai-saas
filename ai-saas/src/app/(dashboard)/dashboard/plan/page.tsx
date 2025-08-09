@@ -1,8 +1,18 @@
+"use client";
+
+import { createStripeSession } from "@/actions/stripe";
 import { Button } from "@/components/ui/button";
 import { plans } from "@/config/plans";
 import { Check } from "lucide-react";
+import { useActionState } from "react";
+
+const initialState = {
+    status: "idle",
+    error: "",
+}
 
 const Plan = () => {
+    const [state, formAction] = useActionState(createStripeSession, initialState);
     return (
       <div className="container py-8 mx-auto">
         <div className="mb-12 text-center">

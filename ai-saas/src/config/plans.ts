@@ -12,7 +12,7 @@ export const plans = [
             "メールサポート"
         ],
         buttonText: "Starterプランを選択",
-        priceId: "price_xxxxxxxxxxxx",
+        priceId: "price_1RtsDS0wr7BuiSCuGWeNEpjw",
     },
     {
         name: "Pro",
@@ -27,7 +27,7 @@ export const plans = [
         ],
         popular: true,
         buttonText: "Proプランを選択",
-        priceId: "price_xxxxxxxxxxxx",
+        priceId: "price_1RtsAu0wr7BuiSCutWpYpLfd",
     },
     {
         name: "Enterprice",
@@ -41,6 +41,6 @@ export const plans = [
             "新機能先行利用可能",
         ],
         buttonText: "Enterpriceプランを選択",
-        priceId: "price_xxxxxxxxxxxx",
+        priceId: "price_1RtsBH0wr7BuiSCueYOEvMw9",
     },
 ];
