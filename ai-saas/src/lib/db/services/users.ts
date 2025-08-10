@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "../prisma";
+import { SubscriptionStatus } from "@prisma/client";
 
 export async function createUser(clerkId: string, email: string) {
     try {
@@ -8,13 +9,27 @@ export async function createUser(clerkId: string, email: string) {
                 clerkId: clerkId,
                 email: email,
                 credits: 5,
-                subscriptionStatus: "FREE",
+                subscriptionStatus: SubscriptionStatus.FREE,
             }
         });
-        return NextResponse.json({ user }, { status: 201 })
+        return NextResponse.json(
+            {
+                user
+            },
+            {
+                status: 201
+            },
+        );
     } catch (error) {
         console.error("Failed to create User:", error);
-        return NextResponse.json({ error }, { status: 500 });
+        return NextResponse.json(
+            {
+                error
+            },
+            {
+                status: 500
+            },
+        );
     } 
 }
 
@@ -28,23 +43,61 @@ export async function updateUser(clerkId: string, email: string) {
                 email: email,
             }
         });
-        return NextResponse.json({ user }, { status: 200 })
+        return NextResponse.json(
+            {
+                user
+            },
+            {
+                status: 200
+            },
+        );
     } catch (error) {
         console.error("Failed to update User:", error);
-        return NextResponse.json({ error }, { status: 500 });
+        return NextResponse.json(
+            {
+                error
+            },
+            {
+                status: 500
+            },
+        );
     } 
 }
 
 export async function deleteUser(clerkId: string) {
     try {
-        const user = await prisma.user.delete({
-            where: {
-                clerkId: clerkId
-            },
+        const user = await prisma.$transaction(async (tx) => {
+            await tx.subscription.deleteMany({
+                where: {
+                    user: {
+                        clerkId: clerkId,
+                    },
+                },
+            });
+            const user = await prisma.user.delete({
+                where: {
+                    clerkId: clerkId,
+                },
+            });
+            return user;
         });
-        return NextResponse.json({ user }, { status: 200 })
+        return NextResponse.json(
+            {
+                user
+            },
+            {
+                status: 200
+            },
+        );
     } catch (error) {
         console.error("Failed to delete User:", error);
-        return NextResponse.json({ error }, { status: 500 });
+        return NextResponse.json(
+            {
+                error
+            },
+            {
+                status: 500
+            },
+        );
     } 
 }

@@ -1,5 +1,5 @@
 const Optimize= () => {
-    return <div>Optimize</div>
+    return <div>Comming Soon ...</div>
 }
 
 export default Optimize;
