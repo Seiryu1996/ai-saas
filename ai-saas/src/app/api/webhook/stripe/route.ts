@@ -1,7 +1,9 @@
 import { stripe } from "@/config/stripe";
-import { prisma } from "@/lib/db/prisma";
-import { handleSubscriptionCreated, handleSubscriptionDeleted, handleSubscriptionUpdated } from "@/lib/subscription/events/events";
-import { SubscriptionStatus } from "@prisma/client";
+import {
+    handleSubscriptionCreated,
+    handleSubscriptionDeleted,
+    handleSubscriptionUpdated
+} from "@/lib/subscription/events/events";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -13,23 +15,11 @@ export async function POST(req: Request) {
 
         if (endpointSecret) {
             const signature = req.headers.get('stripe-signature') as string;
-            try {
-                event = stripe.webhooks.constructEvent(
-                    body,
-                    signature,
-                    endpointSecret
-                );
-            } catch (error) {
-                console.log(`⚠️  Webhook signature verification failed.`, error);
-                return NextResponse.json(
-                    {
-                        error: "Webhook Error"
-                    },
-                    {
-                        status: 400
-                    },
-                );
-            }
+            event = stripe.webhooks.constructEvent(
+                body,
+                signature,
+                endpointSecret
+            );
             if (!event) {
                 return NextResponse.json(
                     {
