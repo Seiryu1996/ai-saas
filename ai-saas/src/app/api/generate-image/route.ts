@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     try {
         const formData = new FormData();
         // 一部日本語対応していないため、英語化するAPIに変更する必要あり
-        formData.append("prompt", `Create Image with ${keyword}`);
+        formData.append("prompt", `Create Image with [${keyword}], resolution 1280x720`);
         formData.append("output_format", "png");
         const response = await axios.postForm(
             `https://api.stability.ai/v2beta/stable-image/generate/core`,

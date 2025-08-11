@@ -24,7 +24,7 @@ export async function getUserCredits() {
     }
 }
 
-export async function decrementCredits(clerkId: string) {
+export async function decrementCredits(clerkId: string, amount: number = 1) {
     try {
         const user = await prisma.user.update({
             where: {
@@ -32,7 +32,7 @@ export async function decrementCredits(clerkId: string) {
             },
             data: {
                 credits: {
-                    decrement: 1,
+                    decrement: amount,
                 },
             },
             select: {

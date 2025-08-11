@@ -28,7 +28,7 @@ const ImageGenerator= () => {
         if (!state.imageUrl) {
             return;
         }
-        download(state.imageUrl, `${state.keyword}.png`);
+        download(state.imageUrl, `${state.keyword}`);
     }
     return (
         <div className="space-y-6">
