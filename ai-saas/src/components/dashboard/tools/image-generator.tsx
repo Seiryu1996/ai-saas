@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import LoadingSpinner from "../../common/loading-spinner";
 import { download } from "@/utils/client-utils";
 import { SignInButton, useUser } from "@clerk/nextjs";
+import { CREDITS } from "@/config/credits";
 
 
 const initialState: GenerateImageState = {
@@ -28,7 +29,7 @@ const ImageGenerator= () => {
         if (!state.imageUrl) {
             return;
         }
-        download(state.imageUrl, `${state.keyword}.png`);
+        download(state.imageUrl, `${state.keyword}`);
     }
     return (
         <div className="space-y-6">
@@ -42,6 +43,9 @@ const ImageGenerator= () => {
                             placeholder="作成したい画像のキーワードを英語で入力(例：Sea、Moutain、City、Natural)"
                             required
                         />
+                        <p className="text-sm text-muted-foreground">
+                            {CREDITS.IMAGE_GENERATOR}クレジット消費
+                        </p>
                     </div>
                     {/** submit button */}
                     {isSignedIn ? (

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import axios from "axios";
 import FormData from "form-data";
 import { optimizeImage } from "@/utils/utils";
+import { API } from "@/config/stability-api";
 
 export async function POST(req: Request) {
     const { keyword } = await req.json();
@@ -9,10 +10,10 @@ export async function POST(req: Request) {
     try {
         const formData = new FormData();
         // 一部日本語対応していないため、英語化するAPIに変更する必要あり
-        formData.append("prompt", `Create Image with ${keyword}`);
+        formData.append("prompt", `Create Image with [${keyword}]`);
         formData.append("output_format", "png");
         const response = await axios.postForm(
-            `https://api.stability.ai/v2beta/stable-image/generate/core`,
+            API.IMAGE,
             formData,
             {
                 validateStatus: undefined,

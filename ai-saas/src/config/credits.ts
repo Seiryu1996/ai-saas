@@ -1,0 +1,6 @@
+export const CREDITS = {
+    IMAGE_GENERATOR: 5,
+    REMOVE_BG: 5,
+    OPTIMIZE: 5,
+    MODEL_3D_GENERATOR: 15,
+}

@@ -41,6 +41,7 @@
     "@stripe/stripe-js": "^7.8.0",
     "@tidbcloud/prisma-adapter": "^6.12.0",
     "@tidbcloud/serverless": "^0.2.0",
+    "@types/three": "^0.179.0",
     "axios": "^1.11.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -64,6 +65,7 @@
     "sonner": "^2.0.6",
     "stripe": "^18.4.0",
     "tailwind-merge": "^3.3.1",
+    "three": "^0.179.1",
     "vaul": "^1.1.2",
     "winston": "^3.17.0",
     "zod": "^4.0.14"
