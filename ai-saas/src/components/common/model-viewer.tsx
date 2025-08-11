@@ -6,53 +6,42 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 interface ModelViewerProps {
-    modelData: string; // Base64 encoded model data
+    modelData: string;
     className?: string;
 }
 
 const ModelViewer = ({ modelData, className = "" }: ModelViewerProps) => {
     const mountRef = useRef<HTMLDivElement>(null);
-    const sceneRef = useRef<THREE.Scene>();
-    const rendererRef = useRef<THREE.WebGLRenderer>();
-    const animationRef = useRef<number>();
+    const sceneRef = useRef<THREE.Scene | null>(null);
+    const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+    const animationRef = useRef<number | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isClient, setIsClient] = useState(false);
-    
-    // SSR回避のためクライアントサイドでのみ実行
     useEffect(() => {
         setIsClient(true);
     }, []);
-
     useEffect(() => {
         if (!isClient || !mountRef.current || !modelData) {
             console.log('ModelViewer: Missing client/mount ref/model data');
             return;
         }
-        
-        console.log('ModelViewer: Initializing with data length:', modelData.length);
-        
-        // 既存のcanvasを確実にクリーンアップ
         const mountElement = mountRef.current;
         while (mountElement.firstChild) {
             mountElement.removeChild(mountElement.firstChild);
         }
-
-        // Scene setup
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xf8f9fa); // より明るい背景
+        scene.background = new THREE.Color(0xf8f9fa);
         sceneRef.current = scene;
 
-        // Camera setup
         const camera = new THREE.PerspectiveCamera(
-            50, // より狭い視野角でより良い視点
+            50,
             mountRef.current.clientWidth / mountRef.current.clientHeight,
             0.01,
             1000
         );
-        camera.position.set(3, 3, 3); // より良い初期位置
+        camera.position.set(3, 3, 3);
 
-        // Renderer setup
         const renderer = new THREE.WebGLRenderer({ 
             antialias: true,
             alpha: true,
@@ -61,15 +50,12 @@ const ModelViewer = ({ modelData, className = "" }: ModelViewerProps) => {
         renderer.setSize(mountElement.clientWidth, mountElement.clientHeight);
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // パフォーマンス向上
-        
-        // レンダラーのcanvasを安全に追加
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         if (renderer.domElement && !mountElement.contains(renderer.domElement)) {
             mountElement.appendChild(renderer.domElement);
         }
         rendererRef.current = renderer;
 
-        // Controls setup
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
@@ -79,12 +65,9 @@ const ModelViewer = ({ modelData, className = "" }: ModelViewerProps) => {
         controls.minDistance = 0.5;
         controls.maxDistance = 10;
 
-        // 改善されたライティング設定
-        // 環境光（全体的な明るさ）
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
         scene.add(ambientLight);
 
-        // メインの指向性ライト
         const mainLight = new THREE.DirectionalLight(0xffffff, 0.8);
         mainLight.position.set(5, 8, 5);
         mainLight.castShadow = true;
@@ -96,27 +79,23 @@ const ModelViewer = ({ modelData, className = "" }: ModelViewerProps) => {
         mainLight.shadow.camera.right = 10;
         mainLight.shadow.camera.top = 10;
         mainLight.shadow.camera.bottom = -10;
-        mainLight.shadow.bias = -0.001; // 影のアーティファクト軽減
+        mainLight.shadow.bias = -0.001;
         scene.add(mainLight);
 
-        // 補助光（影を柔らかくする）
         const fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
         fillLight.position.set(-5, 0, -5);
         scene.add(fillLight);
 
-        // リムライト（輪郭を強調）
         const rimLight = new THREE.DirectionalLight(0xffffff, 0.2);
         rimLight.position.set(0, 5, -5);
         scene.add(rimLight);
 
-        // グリッドヘルパー（地面の目安）
         const gridHelper = new THREE.GridHelper(10, 20, 0xcccccc, 0xcccccc);
         gridHelper.material.opacity = 0.3;
         gridHelper.material.transparent = true;
-        gridHelper.position.y = -0.005; // 地面より少し上に配置
+        gridHelper.position.y = -0.005;
         scene.add(gridHelper);
 
-        // 地面（影を受ける）- 少し下に配置
         const groundGeometry = new THREE.PlaneGeometry(20, 20);
         const groundMaterial = new THREE.MeshLambertMaterial({ 
             color: 0xf5f5f5,
@@ -125,22 +104,15 @@ const ModelViewer = ({ modelData, className = "" }: ModelViewerProps) => {
         });
         const ground = new THREE.Mesh(groundGeometry, groundMaterial);
         ground.rotation.x = -Math.PI / 2;
-        ground.position.y = -0.01; // わずかに下に配置してZ-fighting回避
+        ground.position.y = -0.01;
         ground.receiveShadow = true;
         scene.add(ground);
 
-        // Load GLB model
         const loader = new GLTFLoader();
         
         try {
-            // Convert base64 to blob (効率的な方法)
-            console.log('ModelViewer: Converting base64 to blob...');
-            
-            // より効率的なBase64デコード
             const binaryString = atob(modelData);
             const bytes = new Uint8Array(binaryString.length);
-            
-            // チャンク処理でメモリ効率を向上
             const chunkSize = 8192;
             for (let i = 0; i < binaryString.length; i += chunkSize) {
                 const chunk = binaryString.slice(i, i + chunkSize);
@@ -148,76 +120,47 @@ const ModelViewer = ({ modelData, className = "" }: ModelViewerProps) => {
                     bytes[i + j] = chunk.charCodeAt(j);
                 }
             }
-            
             const blob = new Blob([bytes], { type: "model/gltf-binary" });
             const url = URL.createObjectURL(blob);
-            console.log('ModelViewer: Blob created, size:', blob.size);
-
             loader.load(
             url,
             (gltf) => {
-                console.log('ModelViewer: Model loaded successfully');
                 setLoading(false);
                 setError(null);
                 const model = gltf.scene;
-                
-                // モデルの改善されたセットアップ
                 const box = new THREE.Box3().setFromObject(model);
                 const center = box.getCenter(new THREE.Vector3());
                 const size = box.getSize(new THREE.Vector3());
-                
-                // 適切なスケーリング（ビューポートの70%に収める）
                 const maxDim = Math.max(size.x, size.y, size.z);
                 const scale = 2.5 / maxDim;
                 model.scale.setScalar(scale);
-                
-                // スケーリング後の境界ボックスを再計算
                 const scaledBox = new THREE.Box3().setFromObject(model);
                 const scaledCenter = scaledBox.getCenter(new THREE.Vector3());
-                
-                // モデルをX,Z軸でセンタリング
                 model.position.x = -scaledCenter.x;
                 model.position.z = -scaledCenter.z;
-                
-                // Y軸は地面の少し上に配置（足が埋もれないように）
-                const groundOffset = 0.02; // 地面から少し上に浮かせる
+                const groundOffset = 0.02;
                 model.position.y = -scaledBox.min.y + groundOffset;
-                
-                // マテリアルとシャドウの改善
                 model.traverse((node) => {
                     if (node instanceof THREE.Mesh) {
                         node.castShadow = true;
                         node.receiveShadow = true;
-                        
-                        // マテリアルの改善
                         if (node.material) {
-                            // PBRマテリアルの場合
                             if ('roughness' in node.material) {
                                 node.material.envMapIntensity = 1.0;
                             }
-                            
-                            // すべてのマテリアルに対して
                             node.material.needsUpdate = true;
                         }
                     }
                 });
-                
                 scene.add(model);
-                
-                // カメラの位置を調整（スケーリング後の実際のサイズに基づく）
                 const finalBox = new THREE.Box3().setFromObject(model);
                 const finalSize = finalBox.getSize(new THREE.Vector3());
                 const finalCenter = finalBox.getCenter(new THREE.Vector3());
-                
                 const distance = Math.max(finalSize.x, finalSize.z, finalSize.y) * 1.5;
-                
-                // カメラを適切な位置に配置（モデルの実際の中心を見るように）
                 camera.position.set(distance, distance * 0.7, distance);
                 camera.lookAt(finalCenter);
                 controls.target.copy(finalCenter);
                 controls.update();
-                
-                // Clean up the blob URL
                 URL.revokeObjectURL(url);
             },
             (progress) => {
@@ -226,7 +169,7 @@ const ModelViewer = ({ modelData, className = "" }: ModelViewerProps) => {
                 (error) => {
                     console.error("Error loading model:", error);
                     setLoading(false);
-                    setError(`モデルの読み込みに失敗しました: ${error.message}`);
+                    setError(`モデルの読み込みに失敗しました: ${error instanceof Error ? error.message : String(error)}`);
                     URL.revokeObjectURL(url);
                 }
             );
@@ -235,16 +178,12 @@ const ModelViewer = ({ modelData, className = "" }: ModelViewerProps) => {
             setLoading(false);
             setError(`セットアップエラー: ${error instanceof Error ? error.message : 'Unknown error'}`);
         }
-
-        // Animation loop
         const animate = () => {
             animationRef.current = requestAnimationFrame(animate);
             controls.update();
             renderer.render(scene, camera);
         };
         animate();
-
-        // Handle resize
         const handleResize = () => {
             if (!mountRef.current) return;
             
@@ -252,30 +191,17 @@ const ModelViewer = ({ modelData, className = "" }: ModelViewerProps) => {
             camera.updateProjectionMatrix();
             renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
         };
-
         window.addEventListener("resize", handleResize);
-
-        // Cleanup
         return () => {
-            console.log('ModelViewer: Cleaning up...');
-            
-            // アニメーションループを停止
             if (animationRef.current) {
                 cancelAnimationFrame(animationRef.current);
-                animationRef.current = undefined;
+                animationRef.current = null;
             }
-            
-            // イベントリスナーを削除
             window.removeEventListener("resize", handleResize);
-            
-            // Scene, Camera, Renderer のクリーンアップ
             if (scene) {
-                // シーン内のすべてのオブジェクトを削除
                 while(scene.children.length > 0) {
                     const object = scene.children[0];
                     scene.remove(object);
-                    
-                    // メッシュの場合はgeometryとmaterialもクリーンアップ
                     if (object instanceof THREE.Mesh) {
                         if (object.geometry) object.geometry.dispose();
                         if (object.material) {
@@ -288,8 +214,6 @@ const ModelViewer = ({ modelData, className = "" }: ModelViewerProps) => {
                     }
                 }
             }
-            
-            // レンダラーのクリーンアップ
             if (renderer) {
                 if (mountElement && renderer.domElement && mountElement.contains(renderer.domElement)) {
                     mountElement.removeChild(renderer.domElement);

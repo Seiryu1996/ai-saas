@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import LoadingSpinner from "../../common/loading-spinner";
 import { download } from "@/utils/client-utils";
 import { SignInButton, useUser } from "@clerk/nextjs";
+import { CREDITS } from "@/config/credits";
 
 const initialState: RemoveBackgroundState = {
     status: "idle",
@@ -43,6 +44,9 @@ const RemoveBackground= () => {
                             className="w-full"
                             required
                         />
+                        <p className="text-sm text-muted-foreground">
+                            {CREDITS.REMOVE_BG}クレジット消費
+                        </p>
                     </div>
                     {/** submit button */}
                     {isSignedIn ? (

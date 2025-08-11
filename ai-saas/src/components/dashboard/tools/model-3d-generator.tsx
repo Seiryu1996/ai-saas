@@ -13,6 +13,7 @@ import { download } from "@/utils/client-utils";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import { RadioGroup, RadioGroupItem } from "../../ui/radio-group";
 import ModelViewer from "../../common/model-viewer";
+import { CREDITS } from "@/config/credits";
 
 const initialState: Generate3dModelState = {
     status: "idle",
@@ -177,7 +178,7 @@ const Model3dGenerator = () => {
                                 required
                             />
                             <p className="text-sm text-muted-foreground">
-                                テキスト→画像→3Dモデルの順で生成されます（2クレジット消費）
+                                テキスト→画像→3Dモデルの順で生成されます（{CREDITS.MODEL_3D_GENERATOR}クレジット消費）
                             </p>
                         </div>
                     )}
@@ -194,7 +195,7 @@ const Model3dGenerator = () => {
                                 required
                             />
                             <p className="text-sm text-muted-foreground">
-                                アップロードした画像から3Dモデルを生成します（2クレジット消費）
+                                アップロードした画像から3Dモデルを生成します（{CREDITS.MODEL_3D_GENERATOR}クレジット消費）
                             </p>
                         </div>
                     )}

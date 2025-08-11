@@ -1,5 +1,6 @@
 "use server";
 
+import { CREDITS } from "@/config/credits";
 import { decrementCredits, getUserCredits } from "@/lib/db/services/credits";
 import { GenerateImageState, RemoveBackgroundState, Generate3dModelState } from "@/types/actions";
 import { currentUser } from "@clerk/nextjs/server";
@@ -113,7 +114,7 @@ export async function generate3dModel(
     }
     
     const credits = await getUserCredits();
-    if (credits === null || credits < 2) { // 3D生成は2クレジット消費
+    if (credits === null || credits < CREDITS.MODEL_3D_GENERATOR) {
         redirect("/dashboard/plan?reason=insufficient_credits");
     }
     
@@ -131,7 +132,7 @@ export async function generate3dModel(
         }
         
         const data = await response.json();
-        await decrementCredits(user.id, 2); // 3D生成は2クレジット消費
+        await decrementCredits(user.id, CREDITS.MODEL_3D_GENERATOR);
         revalidatePath("/dashboard");
         
         return {

@@ -2,6 +2,7 @@
 
 import { currentUser } from "@clerk/nextjs/server";
 import { prisma } from "../prisma";
+import { CREDITS } from "@/config/credits";
 
 export async function getUserCredits() {
     try {
@@ -24,7 +25,10 @@ export async function getUserCredits() {
     }
 }
 
-export async function decrementCredits(clerkId: string, amount: number = 1) {
+export async function decrementCredits(
+    clerkId: string,
+    amount: number = CREDITS.IMAGE_GENERATOR
+) {
     try {
         const user = await prisma.user.update({
             where: {

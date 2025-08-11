@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import axios from "axios";
 import FormData from "form-data";
 import { optimizeImage } from "@/utils/utils";
+import { API } from "@/config/stability-api";
 
 export async function POST(req: Request) {
     const formData = await req.formData();
@@ -27,7 +28,7 @@ export async function POST(req: Request) {
         });
         formData.append("output_format", "png");
         const response = await axios.post(
-            `https://api.stability.ai/v2beta/stable-image/edit/remove-background`,
+            API.REMOVE,
             formData,
             {
                 validateStatus: undefined,
