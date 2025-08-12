@@ -174,7 +174,7 @@ const Model3dGenerator = () => {
                             <Input
                                 id="keyword"
                                 name="keyword"
-                                placeholder="3Dモデルにしたいオブジェクトのキーワードを英語で入力(例：Car、House、Chair)"
+                                placeholder="3Dモデルにしたいオブジェクトのキーワードを入力(例：車、家、椅子)"
                                 required
                             />
                             <p className="text-sm text-muted-foreground">

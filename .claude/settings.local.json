@@ -9,7 +9,8 @@
       "Bash(docker system prune:*)",
       "Bash(claude --version)",
       "Bash(claude update)",
-      "Bash(claude mcp:*)"
+      "Bash(claude mcp:*)",
+      "Bash(npm install:*)"
     ],
     "deny": [
       "Bash(docker-compose up:*)",
@@ -17,8 +18,8 @@
       "Bash(docker compose up -d:*)"
     ]
   },
+  "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "serena"
-  ],
-  "enableAllProjectMcpServers": true
+  ]
 }

@@ -40,7 +40,7 @@ const ImageGenerator= () => {
                         <Input
                             id="keyword"
                             name="keyword"
-                            placeholder="作成したい画像のキーワードを英語で入力(例：Sea、Moutain、City、Natural)"
+                            placeholder="作成したい画像のキーワードを入力(例：海、山、街、自然)"
                             required
                         />
                         <p className="text-sm text-muted-foreground">
@@ -75,11 +75,11 @@ const ImageGenerator= () => {
             {state.imageUrl && (
                 <div className="space-y-4">
                     <div className="overflow-hidden rounded-lg border bg-background">
-                        <div className="aspect-video relative">
+                        <div className="relative">
                             <img
                                 src={state.imageUrl}
                                 alt="Generated image"
-                                className="w-full h-full object-cover"
+                                className="w-full h-auto"
                             />
                         </div>
                     </div>

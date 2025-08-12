@@ -6,6 +6,7 @@ import { GenerateImageState, RemoveBackgroundState, Generate3dModelState, Optimi
 import { currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { translateToEnglish } from "@/lib/gemini";
 
 export async function generateImage(
     state: GenerateImageState,
@@ -28,6 +29,9 @@ export async function generateImage(
         redirect("/dashboard/plan?reason=insufficient_credits");
     }
     try {
+        const translatedKeyword = await translateToEnglish(keyword);
+        console.log(translatedKeyword);
+        
         const response = await fetch(
             `${process.env.BASE_URL}/api/generate-image`,
             {
@@ -35,7 +39,7 @@ export async function generateImage(
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ keyword }),
+                body: JSON.stringify({ keyword: translatedKeyword }),
             }
         );
         const data = await response.json();
@@ -119,11 +123,23 @@ export async function generate3dModel(
     }
     
     try {
+        const keyword = formData.get("keyword") as string;
+        const translatedKeyword = await translateToEnglish(keyword);
+        
+        const newFormData = new FormData();
+        for (const [key, value] of formData.entries()) {
+            if (key === "keyword") {
+                newFormData.append(key, translatedKeyword);
+            } else {
+                newFormData.append(key, value);
+            }
+        }
+        
         const response = await fetch(
             `${process.env.BASE_URL}/api/generate-3d-model`,
             {
                 method: "POST",
-                body: formData,
+                body: newFormData,
             }
         );
         
@@ -140,7 +156,7 @@ export async function generate3dModel(
             modelData: data.modelData,
             modelType: data.modelType,
             originalImage: data.generatedImage,
-            keyword: formData.get("keyword") as string,
+            keyword: keyword,
         };
     } catch (error) {
         console.log(error);
