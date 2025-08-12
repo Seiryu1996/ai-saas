@@ -2,7 +2,7 @@
 
 import { CREDITS } from "@/config/credits";
 import { decrementCredits, getUserCredits } from "@/lib/db/services/credits";
-import { GenerateImageState, RemoveBackgroundState, Generate3dModelState } from "@/types/actions";
+import { GenerateImageState, RemoveBackgroundState, Generate3dModelState, OptimizeImageState } from "@/types/actions";
 import { currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -147,6 +147,75 @@ export async function generate3dModel(
         return {
             status: "error",
             error: "3Dモデルの生成に失敗しました"
+        };
+    }
+}
+
+export async function optimizeImage(
+    state: OptimizeImageState,
+    formData: FormData
+): Promise<OptimizeImageState> {
+    const image = formData.get("image") as File;
+    const quality = parseInt(formData.get("quality") as string) || 80;
+    
+    if (!image) {
+        return {
+            status: "error",
+            error: "画像ファイルを選択してください"
+        }
+    }
+    
+    const user = await currentUser();
+    if (!user) {
+        throw new Error("認証が必要です")
+    }
+    
+    const credits = await getUserCredits();
+    if (credits === null || credits < CREDITS.OPTIMIZE) {
+        redirect("/dashboard/plan?reason=insufficient_credits");
+    }
+    
+    try {
+        const originalSize = image.size;
+        const originalImageUrl = URL.createObjectURL(image);
+        
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        
+        await new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = reject;
+            img.src = originalImageUrl;
+        });
+        
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx?.drawImage(img, 0, 0);
+        
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', quality / 100);
+        
+        const response = await fetch(compressedDataUrl);
+        const compressedBlob = await response.blob();
+        const compressedSize = compressedBlob.size;
+        const compressionRatio = (originalSize - compressedSize) / originalSize;
+        
+        await decrementCredits(user.id, CREDITS.OPTIMIZE);
+        revalidatePath("/dashboard");
+        
+        return {
+            status: "success",
+            originalImage: originalImageUrl,
+            compressedImage: compressedDataUrl,
+            compressionRatio: compressionRatio,
+            originalSize: originalSize,
+            compressedSize: compressedSize,
+        };
+    } catch (error) {
+        console.log(error);
+        return {
+            status: "error",
+            error: "画像の圧縮に失敗しました"
         };
     }
 }

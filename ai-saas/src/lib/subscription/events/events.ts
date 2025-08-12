@@ -55,7 +55,7 @@ export async function handleSubscriptionCreated(subscription: Stripe.Subscriptio
 
 export async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
     if (subscription.status === "active") {
-        let {
+        const {
             subscriptionStatus,
             credits,
             currentPeriodEnd,
