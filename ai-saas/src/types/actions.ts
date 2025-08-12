@@ -21,6 +21,16 @@ export type Generate3dModelState = {
     keyword?: string;
 };
 
+export type OptimizeImageState = {
+    originalImage?: string;
+    compressedImage?: string;
+    error?: string;
+    status: "idle" | "error" | "success";
+    compressionRatio?: number;
+    originalSize?: number;
+    compressedSize?: number;
+};
+
 export type StripeState = {
     status: "idle" | "success" | "error";
     error: string;

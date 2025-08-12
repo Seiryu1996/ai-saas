@@ -1,0 +1,56 @@
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  background: #d1d5db;
+  border-radius: 4px;
+  outline: none;
+  position: relative;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #3b82f6;
+  cursor: pointer;
+  border-radius: 50%;
+  position: relative;
+  top: -6px;
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #3b82f6;
+  cursor: pointer;
+  border-radius: 50%;
+  border: none;
+  margin-top: -6px;
+}
+
+.slider::-webkit-slider-track {
+  height: 8px;
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+.slider::-moz-range-track {
+  height: 8px;
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+/* 塗りつぶしされた部分 */
+.slider::-webkit-slider-runnable-track {
+  height: 8px;
+  background: linear-gradient(to right, #3b82f6 0%, #3b82f6 var(--progress), #d1d5db var(--progress), #d1d5db 100%);
+  border-radius: 4px;
+}
+
+.slider::-moz-range-progress {
+  background: #3b82f6;
+  height: 8px;
+  border-radius: 4px;
+}
