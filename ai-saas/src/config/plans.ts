@@ -62,3 +62,9 @@ export const plans = [
         priceId: PLANS.PRO.PRICE_ID,
     },
 ];
+
+export const PLAN_PRIORITY: Record<string, number> = {
+    [PLANS.FREE.PRICE_ID]: 0,
+    [PLANS.BASIC.PRICE_ID]: 1,
+    [PLANS.PRO.PRICE_ID]: 2,
+};

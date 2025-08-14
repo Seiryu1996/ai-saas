@@ -3,8 +3,8 @@ import AuthButton from "../auth/auth-button";
 import CreditDisplay from "./credit-display";
 import NavItems from "./nav-items";
 import { Button } from "../ui/button";
-import { currentUser } from "@clerk/nextjs/server";
 import { getUser } from "@/utils/utils";
+import { PLANS } from "@/config/plans";
 
 const DashboardNav = async () => {
     const result = await getUser();
@@ -21,7 +21,7 @@ const DashboardNav = async () => {
 
             <div className="p-4">
                 <CreditDisplay />
-                {user && dbUser?.stripeCustomerId && (
+                {user && dbUser?.subscriptionStatus === PLANS.FREE.NAME && (
                     <Button asChild className="w-full mt-4 text-white" variant={"premium"}>
                         <Link href={"/dashboard/plan"}>アップグレード</Link>
                     </Button>

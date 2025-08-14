@@ -33,6 +33,31 @@ export async function createStripeSession(
                 data: { stripeCustomerId: customer.id },
             });
             customerId = customer.id;
+        } else {
+            const subscription = await stripe.subscriptions.list({
+                customer: customerId,
+                status: "all",
+            });
+            const cancelSub = subscription.data.find(sub => sub.cancel_at_period_end);
+            if (cancelSub) {
+                await stripe.subscriptions.update(
+                    cancelSub.id,
+                    {
+                        cancel_at_period_end: false,
+                        items: [
+                            {
+                                id: cancelSub.items.data[0].id,
+                                price: priceId,
+                            }
+                        ]
+                    }
+                );
+                return {
+                    status: "success",
+                    error: "",
+                    redirectUrl: `${process.env.BASE_URL}/dashboard/?success=true`,
+                };
+            }
         }
 
         const session = await stripe.checkout.sessions.create({

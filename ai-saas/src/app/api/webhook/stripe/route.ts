@@ -1,7 +1,9 @@
 import { stripe } from "@/config/stripe";
 import {
+    getSubscriptionPreviousPriceId,
     handleSubscriptionCreated,
     handleSubscriptionDeleted,
+    handleSubscriptionMonthUpdate,
     handleSubscriptionUpdated
 } from "@/lib/subscription/events/events";
 import { NextResponse } from "next/server";
@@ -37,10 +39,14 @@ export async function POST(req: Request) {
                     handleSubscriptionCreated(subscription);
                     break;
                 case 'customer.subscription.updated':
-                    handleSubscriptionUpdated(subscription);
+                    const previousPriceId = getSubscriptionPreviousPriceId(event.data);
+                    handleSubscriptionUpdated(subscription, previousPriceId);
                     break;
                 case 'customer.subscription.deleted':
                     handleSubscriptionDeleted(subscription);
+                    break;
+                case "invoice.payment_succeeded":
+                    handleSubscriptionMonthUpdate(event.data);
                     break;
             }
             return NextResponse.json(
