@@ -4,7 +4,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import CreditDisplayWrapper from "./credit-display-wrapper";
 
 async function CreditContent() {
-    noStore(); // キャッシュを無効化してリアルタイム更新
+    noStore();
     const user = await currentUser();
     if (user) {
         const credits = await getUserCredits();

@@ -11,9 +11,7 @@ const DashboardNav = async () => {
     const result = await getUser();
     const user = "user" in result ? result.user : null;
     const dbUser = "dbUser" in result ? result.dbUser : null;
-    
-    // Stripeリダイレクトを検知してキーを変更
-    const headersList = headers();
+    const headersList = await headers();
     const referer = headersList.get('referer') || '';
     const isFromStripe = referer.includes('stripe.com');
     const creditKey = isFromStripe ? `credit-stripe-${Date.now()}` : `credit-${user?.id || 'guest'}`;
