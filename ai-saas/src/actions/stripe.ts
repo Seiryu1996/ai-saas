@@ -55,7 +55,7 @@ export async function createStripeSession(
                 return {
                     status: "success",
                     error: "",
-                    redirectUrl: `${process.env.BASE_URL}/dashboard/?success=true`,
+                    redirectUrl: `${process.env.BASE_URL}/dashboard/stripe-return/?success=true`,
                 };
             }
         }
@@ -69,8 +69,8 @@ export async function createStripeSession(
             },
             ],
             mode: 'subscription',
-            success_url: `${process.env.BASE_URL}/dashboard/?success=true`,
-            cancel_url: `${process.env.BASE_URL}/dashboard/?canceled=true`,
+            success_url: `${process.env.BASE_URL}/dashboard/stripe-return/?success=true`,
+            cancel_url: `${process.env.BASE_URL}/dashboard/stripe-return/?canceled=true`,
             metadata: {
                 clerkId: user.id
             },
