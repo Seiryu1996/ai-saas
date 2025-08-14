@@ -88,31 +88,27 @@ export async function handleSubscriptionUpdated(
             currentPeriodEnd,
             priceId
         } = getPlanDetails(subscription);
-        if (subscription.cancel_at_period_end) {
-            handleSubscriptionDeleted(subscription);
-        } else {
-            const upgrated = isUpgrade(previousPriceId, priceId);
+        const upgrated = isUpgrade(previousPriceId, priceId);
 
-            if (!upgrated) return;
+        if (!upgrated) return;
 
-            const addCredits = addCreditsForUpgrade(previousPriceId, priceId);
-            await prisma.user.update({
-                where: { stripeCustomerId: subscription.customer as string },
-                data: {
-                    subscriptionStatus: subscriptionStatus,
-                    credits: {
-                        increment: addCredits,
-                    },
-                    subscriptions: {
-                        update: {
-                            stripeSubscriptionId: subscription.id,
-                            stripePriceId: priceId,
-                            stripeCurrentPeriodEnd: currentPeriodEnd,
-                        }                    
-                    },
+        const addCredits = addCreditsForUpgrade(previousPriceId, priceId);
+        await prisma.user.update({
+            where: { stripeCustomerId: subscription.customer as string },
+            data: {
+                subscriptionStatus: subscriptionStatus,
+                credits: {
+                    increment: addCredits,
                 },
-            });
-        }
+                subscriptions: {
+                    update: {
+                        stripeSubscriptionId: subscription.id,
+                        stripePriceId: priceId,
+                        stripeCurrentPeriodEnd: currentPeriodEnd,
+                    }                    
+                },
+            },
+        });
     }
 }
 
