@@ -3,21 +3,22 @@
 import { stripe } from "@/config/stripe";
 import { prisma } from "@/lib/db/prisma";
 import { StripeState } from "@/types/actions";
-import { currentUser } from "@clerk/nextjs/server";
+import { getUser } from "@/utils/utils";
 
 export async function createStripeSession(
     prevState: StripeState,
     formData: FormData
 ): Promise<StripeState> {
     const priceId = formData.get("priceId") as string;
-    const user = await currentUser();
-    if (!user) {
-        throw new Error("認証が必要です。");
-    }
+    
     try {
-        const dbUser = await prisma.user.findUnique({
-            where: { clerkId: user.id },
-        });
+        const result = await getUser();
+        
+        if ('error' in result) {
+            throw new Error("認証が必要です。");
+        }
+
+        const { user, dbUser } = result;
 
         let customerId = dbUser?.stripeCustomerId;
         if (!customerId) {

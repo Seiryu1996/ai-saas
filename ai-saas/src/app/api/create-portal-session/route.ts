@@ -1,37 +1,26 @@
 import { stripe } from "@/config/stripe";
-import { prisma } from "@/lib/db/prisma";
-import { currentUser } from "@clerk/nextjs/server";
+import { getUser } from "@/utils/utils";
 import { NextResponse } from "next/server";
 
 export async function POST() {
     try {
-        const user = await currentUser();
-        if (!user) {
+        const result = await getUser();
+        
+        if ('error' in result) {
             return NextResponse.json(
                 {
-                    error: "Unauthorized"
+                    error: result.error
                 },
                 {
-                    status: 401
-                },
-            );
-        }
-        const dbUser = await prisma.user.findUnique({
-            where: { clerkId: user.id },
-        });
-        if (!dbUser?.stripeCustomerId) {
-            return NextResponse.json(
-                {
-                    error: "No stripe customer id"
-                },
-                {
-                    status: 400
+                    status: result.status
                 },
             );
         }
 
+        const { dbUser } = result;
+
         const session = await stripe.billingPortal.sessions.create({
-            customer: dbUser?.stripeCustomerId,
+            customer: dbUser.stripeCustomerId,
             return_url: `${process.env.BASE_URL}/dashboard/stripe-return`,
         });
 
