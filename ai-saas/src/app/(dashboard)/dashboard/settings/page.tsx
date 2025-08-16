@@ -2,22 +2,20 @@ import PageContainer from "@/components/dashboard/page-container"
 import PageHeader from "@/components/dashboard/page-header";
 import ProfileSection from "@/components/dashboard/settings/profile-section";
 import SubscriptionSettingsForm from "@/components/dashboard/settings/subscription-settings-form";
-import { prisma } from "@/lib/db/prisma";
-import { currentUser } from "@clerk/nextjs/server";
+import { getUser } from "@/utils/utils";
 
 const Setting = async () => {
-    const user = await currentUser();
-    if (!user) {
-        return (
-            <div>ログインしてください。</div>
-        )
-    }
-    const dbUser = await prisma.user.findUnique({
-        where : { clerkId: user.id },
-        include: {
-            subscriptions: true
+    const result = await getUser(true);
+    
+    if ('error' in result) {
+        if (result.status === 401) {
+            return <div>ログインしてください。</div>;
         }
-    });
+        throw new Error("ユーザが見つかりませんでした。");
+    }
+
+    const { user, dbUser } = result;
+
     if (!dbUser) {
         throw new Error("ユーザが見つかりませんでした。");
     }

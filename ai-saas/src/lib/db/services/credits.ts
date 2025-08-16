@@ -1,24 +1,18 @@
 "server-only"
 
-import { currentUser } from "@clerk/nextjs/server";
 import { prisma } from "../prisma";
 import { CREDITS } from "@/config/credits";
+import { getUser } from "@/utils/utils";
 
 export async function getUserCredits() {
     try {
-        const user = await currentUser();
-        if (!user) {
+        const result = await getUser(false, { credits: true });
+        
+        if ('error' in result) {
             return 0;
         }
-        const dbUser = await prisma.user.findUnique({
-            where: {
-                clerkId: user.id,
-            },
-            select: {
-                credits: true,
-            },
-        });
-        return dbUser?.credits ?? 0;
+
+        return result.dbUser?.credits ?? 0;
     } catch (error) {
         console.error("Error fetching user credits:", error);
         return 0;
