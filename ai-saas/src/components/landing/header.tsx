@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { SignInButton, SignUpButton } from "@clerk/nextjs";
 import { Menu, Sparkles } from "lucide-react";
@@ -12,6 +11,11 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const scrollToSection = (sectionId: string) => {
+    if (window.location.pathname !== '/') {
+      window.location.href = `/#${sectionId}`;
+      return;
+    }
+    
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -78,40 +82,40 @@ const Header = () => {
               <Menu className="h-5 w-5" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-80">
-            <div className="flex flex-col space-y-4 mt-8">
+          <SheetContent side="right" className="w-80 p-6">
+            <div className="flex flex-col space-y-6 mt-4">
               <button 
                 onClick={() => scrollToSection('features')}
-                className="text-left py-2 text-lg font-medium hover:text-primary transition-colors"
+                className="text-left py-3 text-lg font-medium hover:text-primary transition-colors border-b border-border"
               >
                 機能
               </button>
               <button 
                 onClick={() => scrollToSection('use-cases')}
-                className="text-left py-2 text-lg font-medium hover:text-primary transition-colors"
+                className="text-left py-3 text-lg font-medium hover:text-primary transition-colors border-b border-border"
               >
                 活用事例
               </button>
               <button 
                 onClick={() => scrollToSection('pricing')}
-                className="text-left py-2 text-lg font-medium hover:text-primary transition-colors"
+                className="text-left py-3 text-lg font-medium hover:text-primary transition-colors border-b border-border"
               >
                 料金
               </button>
               <Link 
                 href="/dashboard" 
-                className="text-left py-2 text-lg font-medium hover:text-primary transition-colors"
+                className="text-left py-3 text-lg font-medium hover:text-primary transition-colors border-b border-border"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 ダッシュボード
               </Link>
-              <div className="flex flex-col space-y-2 pt-4">
+              <div className="flex flex-col space-y-3 pt-6">
                 <SignInButton
                   mode="modal"
                   fallbackRedirectUrl={"/dashboard"}
                   forceRedirectUrl={"/dashboard"}
                 >
-                  <Button variant="ghost" onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="ghost" className="w-full" onClick={() => setMobileMenuOpen(false)}>
                     ログイン
                   </Button>
                 </SignInButton>
@@ -120,7 +124,7 @@ const Header = () => {
                   fallbackRedirectUrl={"/dashboard"}
                   forceRedirectUrl={"/dashboard"}
                 >
-                  <Button onClick={() => setMobileMenuOpen(false)}>
+                  <Button className="w-full" onClick={() => setMobileMenuOpen(false)}>
                     無料で始める
                   </Button>
                 </SignUpButton>
