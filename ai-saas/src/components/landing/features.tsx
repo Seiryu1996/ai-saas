@@ -3,6 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { SignUpButton } from "@clerk/nextjs";
 import { Image, Layers, ImageDown, Armchair, Zap, Clock, Shield, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -161,9 +162,13 @@ const Features = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <Button size="lg" asChild>
-            <a href="/sign-up">今すぐ無料で試す</a>
-          </Button>
+          <SignUpButton
+            mode="modal"
+            fallbackRedirectUrl={"/dashboard"}
+            forceRedirectUrl={"/dashboard"}
+          >
+            <Button size="lg">今すぐ無料で試す</Button>
+          </SignUpButton>
         </motion.div>
       </div>
     </section>

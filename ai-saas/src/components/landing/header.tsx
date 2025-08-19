@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { SignInButton, SignUpButton } from "@clerk/nextjs";
 import { Menu, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -54,12 +55,20 @@ const Header = () => {
 
         {/* CTA Buttons */}
         <div className="hidden md:flex items-center space-x-4">
-          <Button variant="ghost" asChild>
-            <Link href="/sign-in">ログイン</Link>
-          </Button>
-          <Button asChild>
-            <Link href="/sign-up">無料で始める</Link>
-          </Button>
+          <SignInButton
+            mode="modal"
+            fallbackRedirectUrl={"/dashboard"}
+            forceRedirectUrl={"/dashboard"}
+          >
+            <Button variant="ghost">ログイン</Button>
+          </SignInButton>
+          <SignUpButton
+            mode="modal"
+            fallbackRedirectUrl={"/dashboard"}
+            forceRedirectUrl={"/dashboard"}
+          >
+            <Button>無料で始める</Button>
+          </SignUpButton>
         </div>
 
         {/* Mobile Menu */}
@@ -97,16 +106,24 @@ const Header = () => {
                 ダッシュボード
               </Link>
               <div className="flex flex-col space-y-2 pt-4">
-                <Button variant="ghost" asChild>
-                  <Link href="/sign-in" onClick={() => setMobileMenuOpen(false)}>
+                <SignInButton
+                  mode="modal"
+                  fallbackRedirectUrl={"/dashboard"}
+                  forceRedirectUrl={"/dashboard"}
+                >
+                  <Button variant="ghost" onClick={() => setMobileMenuOpen(false)}>
                     ログイン
-                  </Link>
-                </Button>
-                <Button asChild>
-                  <Link href="/sign-up" onClick={() => setMobileMenuOpen(false)}>
+                  </Button>
+                </SignInButton>
+                <SignUpButton
+                  mode="modal"
+                  fallbackRedirectUrl={"/dashboard"}
+                  forceRedirectUrl={"/dashboard"}
+                >
+                  <Button onClick={() => setMobileMenuOpen(false)}>
                     無料で始める
-                  </Link>
-                </Button>
+                  </Button>
+                </SignUpButton>
               </div>
             </div>
           </SheetContent>

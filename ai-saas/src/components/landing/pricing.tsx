@@ -3,6 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { SignUpButton } from "@clerk/nextjs";
 import { CheckCircle, Zap, Crown, Rocket } from "lucide-react";
 import { motion } from "framer-motion";
 import { PLANS } from "@/config/plans";
@@ -148,14 +149,19 @@ const Pricing = () => {
                 </CardHeader>
 
                 <CardContent className="space-y-6">
-                  <Button 
-                    className="w-full" 
-                    variant={plan.buttonVariant}
-                    size="lg"
-                    asChild
+                  <SignUpButton
+                    mode="modal"
+                    fallbackRedirectUrl={"/dashboard"}
+                    forceRedirectUrl={"/dashboard"}
                   >
-                    <a href="/sign-up">{plan.buttonText}</a>
-                  </Button>
+                    <Button 
+                      className="w-full" 
+                      variant={plan.buttonVariant}
+                      size="lg"
+                    >
+                      {plan.buttonText}
+                    </Button>
+                  </SignUpButton>
 
                   <div className="space-y-3">
                     <h4 className="font-semibold">含まれる機能:</h4>

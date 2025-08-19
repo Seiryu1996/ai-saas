@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { SignUpButton, SignInButton } from "@clerk/nextjs";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -28,18 +29,26 @@ const CTA = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button size="lg" asChild className="w-full sm:w-auto">
-              <a href="/sign-up" className="inline-flex items-center">
+            <SignUpButton
+              mode="modal"
+              fallbackRedirectUrl={"/dashboard"}
+              forceRedirectUrl={"/dashboard"}
+            >
+              <Button size="lg" className="w-full sm:w-auto inline-flex items-center">
                 <Sparkles className="mr-2 w-5 h-5" />
                 無料でアカウント作成
                 <ArrowRight className="ml-2 w-4 h-4" />
-              </a>
-            </Button>
-            <Button size="lg" variant="outline" asChild className="w-full sm:w-auto">
-              <a href="/sign-in">
+              </Button>
+            </SignUpButton>
+            <SignInButton
+              mode="modal"
+              fallbackRedirectUrl={"/dashboard"}
+              forceRedirectUrl={"/dashboard"}
+            >
+              <Button size="lg" variant="outline" className="w-full sm:w-auto">
                 既にアカウントをお持ちの方
-              </a>
-            </Button>
+              </Button>
+            </SignInButton>
           </div>
 
           {/* Trust indicators */}
