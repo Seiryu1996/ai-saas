@@ -6,69 +6,46 @@ import { Button } from "@/components/ui/button";
 import { SignUpButton } from "@clerk/nextjs";
 import { CheckCircle, Zap, Crown, Rocket } from "lucide-react";
 import { motion } from "framer-motion";
-import { PLANS } from "@/config/plans";
+import { PLANS, plans as configPlans } from "@/config/plans";
+import { CREDITS } from "@/config/credits";
 
 const Pricing = () => {
-  const plans = [
+  const pricingPlans = [
     {
-      name: "FREE",
-      displayName: "フリープラン",
-      price: "¥0",
+      name: PLANS.FREE.NAME,
+      displayName: "フリープラン", 
+      price: configPlans[0].price,
       period: "/月",
       description: "個人利用や試用に最適",
       icon: Zap,
       badge: null,
-      features: [
-        "5クレジット/月",
-        "画像生成 (基本)",
-        "背景除去 (基本)",
-        "画像圧縮",
-        "コミュニティサポート"
-      ],
+      features: configPlans[0].features,
       buttonText: "無料で始める",
       buttonVariant: "outline" as const,
       popular: false
     },
     {
-      name: "BASIC",
+      name: PLANS.BASIC.NAME,
       displayName: "ベーシックプラン",
-      price: "¥980",
-      period: "/月",
+      price: configPlans[1].price,
+      period: "/月", 
       description: "継続的な利用におすすめ",
       icon: Crown,
       badge: "人気",
-      features: [
-        "50クレジット/月",
-        "画像生成 (高品質)",
-        "背景除去 (高精度)",
-        "画像圧縮・最適化",
-        "3Dモデル生成 (基本)",
-        "優先サポート",
-        "API アクセス"
-      ],
+      features: configPlans[1].features,
       buttonText: "ベーシックを選ぶ",
       buttonVariant: "default" as const,
       popular: true
     },
     {
-      name: "PRO",
+      name: PLANS.PRO.NAME,
       displayName: "プロプラン",
-      price: "¥2,980",
+      price: configPlans[2].price, 
       period: "/月",
       description: "プロフェッショナル向け",
       icon: Rocket,
       badge: "最高品質",
-      features: [
-        "200クレジット/月",
-        "画像生成 (プレミアム)",
-        "背景除去 (AI精度)",
-        "画像圧縮・最適化",
-        "3Dモデル生成 (高品質)",
-        "バッチ処理",
-        "専用サポート",
-        "API アクセス",
-        "商用利用可能"
-      ],
+      features: configPlans[2].features,
       buttonText: "プロを選ぶ",
       buttonVariant: "default" as const,
       popular: false
@@ -119,7 +96,7 @@ const Pricing = () => {
           whileInView="visible"
           viewport={{ once: true }}
         >
-          {plans.map((plan, index) => (
+          {pricingPlans.map((plan, index) => (
             <motion.div key={index} variants={itemVariants}>
               <Card className={`relative h-full ${plan.popular ? 'border-primary shadow-lg scale-105' : ''}`}>
                 {plan.badge && (
@@ -196,7 +173,7 @@ const Pricing = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  クレジットは各機能を利用するための単位です。画像生成は5クレジット、背景除去は2クレジットなど、機能によって消費量が異なります。
+                  クレジットは各機能を利用するための単位です。画像生成は{CREDITS.IMAGE_GENERATOR}クレジット、背景除去は{CREDITS.REMOVE_BG}クレジット、画像圧縮は{CREDITS.OPTIMIZE}クレジット、3Dモデル生成は{CREDITS.MODEL_3D_GENERATOR}クレジットなど、機能によって消費量が異なります。
                 </p>
               </CardContent>
             </Card>

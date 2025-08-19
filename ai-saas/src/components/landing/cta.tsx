@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { SignUpButton, SignInButton } from "@clerk/nextjs";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
+import { PLANS } from "@/config/plans";
 
 const CTA = () => {
   return (
@@ -22,7 +23,7 @@ const CTA = () => {
               <span className="text-primary block">創造性を解放しよう</span>
             </h2>
             <p className="text-xl text-muted-foreground">
-              5分でアカウント作成完了。即座に5クレジットをプレゼント。
+              簡単なアカウント作成で即座に{PLANS.FREE.CREDIT}クレジットをプレゼント。
               <br className="hidden md:block" />
               クレジットカード登録は不要です。
             </p>
