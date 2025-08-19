@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { SignUpButton } from "@clerk/nextjs";
 import { ArrowRight, Image, Layers, ImageDown, Armchair, Sparkles, Star, Users } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -56,12 +57,16 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <Button size="lg" asChild className="w-full sm:w-auto">
-              <Link href="/sign-up" className="inline-flex items-center">
+            <SignUpButton
+              mode="modal"
+              fallbackRedirectUrl={"/dashboard"}
+              forceRedirectUrl={"/dashboard"}
+            >
+              <Button size="lg" className="w-full sm:w-auto inline-flex items-center">
                 無料で始める
                 <ArrowRight className="ml-2 w-4 h-4" />
-              </Link>
-            </Button>
+              </Button>
+            </SignUpButton>
             <Button size="lg" variant="outline" asChild className="w-full sm:w-auto">
               <Link href="#features">
                 機能を見る
