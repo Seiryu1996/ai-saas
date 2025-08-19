@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 const TermsPage = () => {
-  const lastUpdated = "2024年1月1日";
+  const lastUpdated = "2025年9月1日";
 
   return (
     <div className="min-h-screen bg-background">
