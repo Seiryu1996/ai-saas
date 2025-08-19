@@ -20,21 +20,27 @@ const Footer = () => {
               あらゆるクリエイティブニーズにお応えします。
             </p>
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm" asChild>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-                  <Twitter className="h-4 w-4" />
-                </a>
-              </Button>
-              <Button variant="ghost" size="sm" asChild>
-                <a href="https://github.com" target="_blank" rel="noopener noreferrer">
-                  <Github className="h-4 w-4" />
-                </a>
-              </Button>
-              <Button variant="ghost" size="sm" asChild>
-                <a href="mailto:contact@aicreator.com">
-                  <Mail className="h-4 w-4" />
-                </a>
-              </Button>
+              {process.env.NEXT_PUBLIC_TWITTER_URL && (
+                <Button variant="ghost" size="sm" asChild>
+                  <a href={process.env.NEXT_PUBLIC_TWITTER_URL} target="_blank" rel="noopener noreferrer">
+                    <Twitter className="h-4 w-4" />
+                  </a>
+                </Button>
+              )}
+              {process.env.NEXT_PUBLIC_GITHUB_URL && (
+                <Button variant="ghost" size="sm" asChild>
+                  <a href={process.env.NEXT_PUBLIC_GITHUB_URL} target="_blank" rel="noopener noreferrer">
+                    <Github className="h-4 w-4" />
+                  </a>
+                </Button>
+              )}
+              {process.env.NEXT_PUBLIC_CONTACT_EMAIL && (
+                <Button variant="ghost" size="sm" asChild>
+                  <a href={`mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL}`}>
+                    <Mail className="h-4 w-4" />
+                  </a>
+                </Button>
+              )}
             </div>
           </div>
 
@@ -67,11 +73,11 @@ const Footer = () => {
 
           {/* Company */}
           <div>
-            <h3 className="font-semibold mb-4">会社情報</h3>
+            <h3 className="font-semibold mb-4">運営情報</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
                 <Link href="/about" className="hover:text-primary transition-colors">
-                  会社概要
+                  運営者情報
                 </Link>
               </li>
               <li>
@@ -83,16 +89,6 @@ const Footer = () => {
                 <Link href="/terms" className="hover:text-primary transition-colors">
                   利用規約
                 </Link>
-              </li>
-              <li>
-                <a 
-                  href="https://status.aicreator.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="hover:text-primary transition-colors"
-                >
-                  ステータスページ
-                </a>
               </li>
               <li>
                 <Link href="/contact" className="hover:text-primary transition-colors">

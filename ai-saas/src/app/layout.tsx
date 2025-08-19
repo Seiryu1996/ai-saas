@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans_JP } from "next/font/google";
 import { ClerkProvider } from '@clerk/nextjs'
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 const notoSansJP = Noto_Sans_JP({
@@ -26,6 +27,7 @@ export default function RootLayout({
           className={`${notoSansJP.className} antialiased`}
         >
           {children}
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>
