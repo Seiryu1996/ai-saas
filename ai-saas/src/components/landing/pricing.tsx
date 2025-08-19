@@ -195,7 +195,7 @@ const Pricing = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  フリープランで全機能をお試しいただけます。クレジットカードの登録は不要です。有料プランも7日間の返金保証付きです。
+                  フリープランで全機能をお試しいただけます。クレジットカードの登録は不要です。有料プランもいつでもキャンセル可能です。
                 </p>
               </CardContent>
             </Card>
