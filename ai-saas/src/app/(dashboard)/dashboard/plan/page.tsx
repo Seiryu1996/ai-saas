@@ -5,9 +5,10 @@ import { createStripeSession } from "@/actions/stripe";
 import { Button } from "@/components/ui/button";
 import { plans } from "@/config/plans";
 import { StripeState } from "@/types/actions";
-import { Check } from "lucide-react";
+import { Check, CreditCard } from "lucide-react";
 import { useActionState } from "react";
 import { toast } from "sonner";
+import Link from "next/link";
 
 const initialState: StripeState = {
     status: "idle",
@@ -35,11 +36,23 @@ const Plan = () => {
     
     return (
       <div className="container py-8 mx-auto">
-        <div className="mb-12 text-center">
+        <div className="mb-12 text-center space-y-6">
             <h1 className="text-4xl font-bold">料金プラン</h1>
             <p className="mt-4 text-muted-foreground text-lg">
                 あなたのニーズに合わせて最適なプランをお選びください。
             </p>
+            
+            <div className="bg-muted/50 p-4 rounded-lg max-w-2xl mx-auto">
+              <p className="text-sm text-muted-foreground mb-3">
+                継続利用を予定していない方や、今回だけ使いたい方は
+              </p>
+              <Link href="/dashboard/prepaid">
+                <Button variant="outline" size="lg">
+                  <CreditCard className="w-4 h-4 mr-2" />
+                  プリペイドクレジット購入はこちら
+                </Button>
+              </Link>
+            </div>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8 md:grid-cols-1 mx-auto max-w-7xl">

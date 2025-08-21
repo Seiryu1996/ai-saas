@@ -4,7 +4,7 @@ import { getUser } from "@/utils/utils";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CreditCard, TrendingUp, Zap } from "lucide-react";
+import { CreditCard, Zap, Plus } from "lucide-react";
 import Link from "next/link";
 import { PLANS } from "@/config/plans";
 import { getUserCredits } from "@/lib/db/services/credits";
@@ -78,8 +78,14 @@ const DashboardPage = async () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3">
+            <Button asChild className="w-full" variant="default">
+              <Link href="/dashboard/prepaid">
+                <Plus className="mr-2 h-4 w-4" />
+                クレジット購入
+              </Link>
+            </Button>
             {dbUser.subscriptionStatus === PLANS.FREE.NAME && (
-              <Button asChild className="w-full" variant="default">
+              <Button asChild className="w-full" variant="outline">
                 <Link href="/dashboard/plan">
                   <Zap className="mr-2 h-4 w-4" />
                   プランをアップグレード
