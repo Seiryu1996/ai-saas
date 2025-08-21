@@ -1,5 +1,5 @@
 import { NavItem } from "@/types/nav";
-import { Armchair, Image, ImageDown, Layers, LayoutDashboard, Settings } from "lucide-react";
+import { Armchair, Image, ImageDown, Layers, LayoutDashboard, Settings, CreditCard } from "lucide-react";
 
 
 export const navItems: NavItem[] = [
@@ -27,6 +27,11 @@ export const navItems: NavItem[] = [
         title: "3Dモデリング",
         href: "/dashboard/tools/3d-model-generator",
         icon : Armchair
+    },
+    {
+        title: "クレジット購入",
+        href: "/dashboard/prepaid",
+        icon : CreditCard,
     },
     {
         title: "設定",
